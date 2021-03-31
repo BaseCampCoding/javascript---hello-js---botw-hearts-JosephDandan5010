@@ -5,8 +5,11 @@ const hitDamageInput = controlsContainer.querySelector("#hit-damage-input");
 const healButton = controlsContainer.querySelector("#heal-button");
 const healAmountInput = controlsContainer.querySelector("#heal-amount-input");
 const addHeartContainerButton = controlsContainer.querySelector("#add-heart-container-button");
+const overhealButton = controlsContainer.querySelector("#overheal-button");
+const overhealAmountInput = controlsContainer.querySelector("#overheal-amount-input");
 let health = 35;
 let maxHealth = 44;
+let overheal = 0;
 
 function randint(lo, hi) {
   return Math.floor(Math.random() * (hi - lo) + lo);
@@ -23,14 +26,28 @@ function updateHeartsDisplay() {
       heart.dataset.quarters = 0;
     }
   }
+  quartersToFill = overheal;
+  for (const heart of heartsContainer.querySelectorAll(".heart.extra")) {
+    if (quartersToFill) {
+      let quarters = Math.min(quartersToFill, 4);
+      heart.dataset.quarters = quarters;
+      quartersToFill -= quarters;    
+    } else {
+      heart.dataset.quarters = 0;
+    }
+  }
 }
-
 addHeartContainerButton.addEventListener("click", function () {
-  let newHeart = heartsContainer.firstElementChild.cloneNode(true);
-  heartsContainer.appendChild(newHeart);
+  heartsContainer.children[(maxHealth / 4)  - 1].insertAdjacentElement('afterend', 
+  `<div class="heart" data-quarters="0">
+    <div class="top-left"></div>
+    <div class="top-right"></div>
+    <div class="bottom-left"></div>
+    <div class="bottom-right"></div>
+  </div>`);
   maxHealth = maxHealth + 4;
   health = maxHealth;
-  updateHeartsDisplay();
+  updateHeartsDisplay(); 
 });
 
 healButton.addEventListener("click", function () {
@@ -41,6 +58,29 @@ healButton.addEventListener("click", function () {
 
 hitButton.addEventListener("click", function () {
   let damage = Number(hitDamageInput.value);
-  health = Math.max(0, health - damage);
+  if (overheal > 0) {
+    overheal = overheal - damage;
+    if (overheal < 0 ) {
+      health = Math.max(0, health + overheal);
+      overheal = 0;
+    };
+  } else {
+    health = Math.max(0, health - damage);
+  };
+  updateHeartsDisplay();
+});
+
+overhealButton.addEventListener("click", function () {
+  overheal = Math.max(Number(overhealAmountInput.value) * 4, overheal);
+  health = maxHealth;
+  for (let i = 0; i < Math.floor(overheal / 4); i++) {
+    heartsContainer.innerHTML = heartsContainer.innerHTML + 
+`<div class="heart extra" data-quarters="4">
+  <div class="top-left"></div>
+  <div class="top-right"></div>
+  <div class="bottom-left"></div>
+  <div class="bottom-right"></div>
+</div>`;
+  }
   updateHeartsDisplay();
 });
