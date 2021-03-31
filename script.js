@@ -4,8 +4,9 @@ const hitButton = controlsContainer.querySelector("#hit-button");
 const hitDamageInput = controlsContainer.querySelector("#hit-damage-input");
 const healButton = controlsContainer.querySelector("#heal-button");
 const healAmountInput = controlsContainer.querySelector("#heal-amount-input");
+const addHeartContainerButton = controlsContainer.querySelector("#add-heart-container-button");
 let health = 35;
-let maxHealth = 40;
+let maxHealth = 44;
 
 function randint(lo, hi) {
   return Math.floor(Math.random() * (hi - lo) + lo);
@@ -23,6 +24,14 @@ function updateHeartsDisplay() {
     }
   }
 }
+
+addHeartContainerButton.addEventListener("click", function () {
+  let newHeart = heartsContainer.firstElementChild.cloneNode(true);
+  heartsContainer.appendChild(newHeart);
+  maxHealth = maxHealth + 4;
+  health = maxHealth;
+  updateHeartsDisplay();
+});
 
 healButton.addEventListener("click", function () {
   let heal = Number(healAmountInput.value);
