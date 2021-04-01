@@ -37,12 +37,12 @@ function updateHeartsDisplay() {
     }
   }
   heartsContainer.innerHTML = heartsContainer.innerHTML.replaceAll(
-  `<div class= "heart extra" data-quarters="0">
-    <div class="top-left"></div>
-    <div class="top-right"></div>
-    <div class="bottom-left"></div>
-    <div class="bottom-right"></div>
-  </div>`, "")
+`<div class="heart extra" data-quarters="0">
+  <div class="top-left"></div>
+  <div class="top-right"></div>
+  <div class="bottom-left"></div>
+  <div class="bottom-right"></div>
+</div>`, "")
 }
 
 addHeartContainerButton.addEventListener("click", function () {
